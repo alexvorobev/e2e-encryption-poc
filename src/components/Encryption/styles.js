@@ -6,4 +6,7 @@ export const MessagesList = styled.div`
     justify-content: flex-end;
     width: 100%;
     flex: 1 1 100%;
+    overflow: hidden;
+    // overflow-y: scroll;
+    min-height: 1px;
 `;
