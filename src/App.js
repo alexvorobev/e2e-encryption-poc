@@ -17,8 +17,8 @@ function App() {
     <MessagesProvider>
       <Wrapper>
         <Container>
-          <Encryption id={leftChatId} keys={leftChatIdKeyPair} participantKey={leftChatIdKeyPair.publicKey}/>
-          <Encryption id={rightChatId} keys={rightChatIdKeyPair} participantKey={rightChatIdKeyPair.publicKey} />
+          <Encryption id={leftChatId} keys={leftChatIdKeyPair} participantKey={rightChatIdKeyPair.publicKey}/>
+          <Encryption id={rightChatId} keys={rightChatIdKeyPair} participantKey={leftChatIdKeyPair.publicKey} />
         </Container>
       </Wrapper>
     </MessagesProvider>

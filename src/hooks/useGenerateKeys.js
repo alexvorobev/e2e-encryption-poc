@@ -1,15 +1,5 @@
 import { useEffect, useState } from "react";
-
-function arrayBufferToBase64(arrayBuffer) {
-    var byteArray = new Uint8Array(arrayBuffer);
-    var byteString = '';
-    for (var i = 0; i < byteArray.byteLength; i++) {
-        byteString += String.fromCharCode(byteArray[i]);
-    }
-    var b64 = window.btoa(byteString);
-
-    return b64;
-}
+import arrayBufferToBase64 from "../utils/arrayBufferToBase64";
 
 function addNewLines(str) {
     var finalString = '';
@@ -34,7 +24,7 @@ const useGenerateKeys = () => {
     useEffect(() => {
         window.crypto.subtle.generateKey({
                 name: "RSA-OAEP",
-                modulusLength: 4096,
+                modulusLength: 2048,
                 publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
                 hash: "SHA-256"
             },

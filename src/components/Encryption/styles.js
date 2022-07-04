@@ -5,8 +5,17 @@ export const MessagesList = styled.div`
     flex-direction: column;
     justify-content: flex-end;
     width: 100%;
-    flex: 1 1 100%;
-    overflow: hidden;
-    // overflow-y: scroll;
     min-height: 1px;
 `;
+
+export const ListWrapper = styled.div`
+    overflow: hidden;
+    overflow-y: scroll;
+    flex: 1 1 auto;
+`
+
+export const MessageDivider = styled.hr`
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+`
