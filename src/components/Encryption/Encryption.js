@@ -36,9 +36,9 @@ const Encryption = ({id, keys, participantKey: participantKeySource}) => {
                     {
                         chatHistory.map(({id: messageId, message, decrypted, sender}) => (
                             <Message key={messageId} type={sender !== id ? 'received' : 'sent'}>
-                                {message}
+                                <Text color='currentcolor'>{message}</Text>
                                 <MessageDivider />
-                                {decrypted}
+                                <Text color='currentcolor'>{decrypted}</Text>
                             </Message>
                         ))
                     }
