@@ -1,5 +1,5 @@
+import { useCallback, useEffect, useRef } from "react";
 import { Button, Pane, Text, TextInputField } from "evergreen-ui";
-import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
 import Message from "../Message";
@@ -9,6 +9,7 @@ import { ListWrapper, MessagesList, MessageDivider } from "./styles";
 
 const Encryption = ({id, keys, participantKey: participantKeySource}) => {
     const { register, handleSubmit, reset } = useForm();
+    const listRef = useRef(null);
     const { privateKey, participantKey} = useKeys({...keys, participantKey: participantKeySource})
     const { chatHistory, sendEncryptedMessage } = useEncryptedMessages({
         userId: id,
@@ -23,10 +24,14 @@ const Encryption = ({id, keys, participantKey: participantKeySource}) => {
         }        
     }, [reset, sendEncryptedMessage])
 
+    useEffect(() => {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+    }, [chatHistory]);
+
     return (
         <Pane padding={32} display="flex" minWidth={1} flexDirection="column" border="default" borderRadius={12} maxHeight="100%">
             <Text size="large" marginBottom={32} fontWeight='bold'>{id}</Text>
-            <ListWrapper>
+            <ListWrapper ref={listRef}>
                 <MessagesList>
                     {
                         chatHistory.map(({id: messageId, message, decrypted, sender}) => (
