@@ -22,16 +22,21 @@ const useEncryptedMessages = ({ userId, participantKey, privateKey }) => {
           enc.encode(message),
         )
         .then((e) => {
-          const message = arrayBufferToBase64(e);
-
-          pushMessage({
+          const messageEncrypted = arrayBufferToBase64(e);
+          const messageData = {
             id: nanoid(),
-            message,
+            message: messageEncrypted,
             sender: userId,
-          });
+          }
+          
+          setChatHistory([...chatHistory, {
+            ...messageData, 
+            decrypted: message,
+          }]);
+          pushMessage(messageData);
         });
     },
-    [participantKey, pushMessage, userId],
+    [participantKey, pushMessage, userId, chatHistory],
   );
 
   const decryptMessage = useCallback(
@@ -54,50 +59,30 @@ const useEncryptedMessages = ({ userId, participantKey, privateKey }) => {
   );
 
   useEffect(() => {
-    Promise.all(
-      messages.map(async (message) => {
-        if (message.sender !== userId) {
-          const decryptedMessage = await decryptMessage(message.message);
+    if(messages.length !== chatHistory.length){
+      Promise.all(
+        messages.map(async (message) => {
+          const chatHistoryMessage = chatHistory.find(({ id }) => id === message.id);
 
-          return {
-            ...message,
-            decrypted: decryptedMessage,
-          };
-        }
-
-        return message;
-      }),
-    ).then((decryptedMessagesResult) => {
-      setChatHistory(decryptedMessagesResult);
-    });
-  }, [messages, userId, decryptMessage]);
-
-  // useEffect(() => {
-  //     let enc = new TextEncoder();
-  //     let dec = new TextDecoder();
-
-  //     window.crypto.subtle.encrypt(
-  //         {
-  //             name: "RSA-OAEP"
-  //           },
-  //           participantKey,
-  //           enc.encode('hey'),
-  //     ).then(e => {
-  //         const encryptedString = arrayBufferToBase64(e)
-  //         const arrayEncrypted = base64ToArrayBuffer(encryptedString)
-
-  //         window.crypto.subtle.decrypt(
-  //             {
-  //                 name: "RSA-OAEP"
-  //             },
-  //             privateKey,
-  //             arrayEncrypted,
-  //         ).then(de => {
-  //             const messEncoded = dec.decode(de);
-  //             console.log('decrypted', messEncoded);
-  //         })
-  //     })
-  // }, [participantKey, privateKey])
+          if(chatHistoryMessage && chatHistoryMessage.decrypted) {
+            return chatHistoryMessage;
+          }
+          if (!message.decrypted) {
+            const decryptedMessage = await decryptMessage(message.message);
+  
+            return {
+              ...message,
+              decrypted: decryptedMessage,
+            };
+          }
+  
+          return message;
+        }),
+      ).then((decryptedMessagesResult) => {
+        setChatHistory(decryptedMessagesResult);
+      });
+    }
+  }, [messages, userId, decryptMessage, chatHistory]);
 
   return {
     sendEncryptedMessage,
