@@ -1,3 +1,3 @@
-import Encryption from "./Encryption";
+import Encryption from './Encryption';
 
 export default Encryption;

@@ -1,24 +1,25 @@
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useState } from 'react';
 
 const MessagesContext = createContext({
-    messages: [],
-    pushMessage: () => {},
-})
+  messages: [],
+  pushMessage: () => {},
+});
 
 export function useMessagesContext() {
-  return useContext(MessagesContext)
+  return useContext(MessagesContext);
 }
 
 export const MessagesProvider = ({ children }) => {
-    const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([]);
 
-    const pushMessage = useCallback((message) => {
-        setMessages([...messages, message])
-    }, [messages])
+  const pushMessage = useCallback(
+    (message) => {
+      setMessages([...messages, message]);
+    },
+    [messages],
+  );
 
-    return <MessagesContext.Provider value={{messages, pushMessage}}>
-        {children}
-    </MessagesContext.Provider>
-}
+  return <MessagesContext.Provider value={{ messages, pushMessage }}>{children}</MessagesContext.Provider>;
+};
 
-export default MessagesContext
+export default MessagesContext;
